@@ -26,6 +26,9 @@ public class Proposta {
         this.salario = salario;
     }
 
+    public Proposta() {
+    }
+
     public Long getId() {
         return id;
     }
