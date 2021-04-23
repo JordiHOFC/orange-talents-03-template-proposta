@@ -1,7 +1,7 @@
 package br.com.zup.propostas.propostas;
 
+import br.com.zup.propostas.clients.AnaliseFinanceiraClient;
 import br.com.zup.propostas.handler.ErrorPersonalizado;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,9 +17,11 @@ import java.net.URI;
 @RestController
 public class PropostaController {
     private final EntityManager manager;
+    private final AnaliseFinanceiraClient client;
 
-    public PropostaController(EntityManager manager) {
+    public PropostaController(EntityManager manager, AnaliseFinanceiraClient client) {
         this.manager = manager;
+        this.client = client;
     }
 
     @PostMapping("/propostas")
@@ -31,6 +33,9 @@ public class PropostaController {
         }
         Proposta proposta = request.paraModelo();
         manager.persist(proposta);
+        AnaliseReponse reponse = client.solicitarAnalise(new SolicitacaoAnaliseRequest(proposta));
+        proposta.statusProposta(reponse.getResultadoSolicitacao());
+
         URI uri=uriComponentsBuilder.path("/propostas/{id}").buildAndExpand(proposta.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
