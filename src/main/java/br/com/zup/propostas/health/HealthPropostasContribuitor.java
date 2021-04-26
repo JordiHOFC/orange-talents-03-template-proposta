@@ -14,9 +14,10 @@ public class HealthPropostasContribuitor implements CompositeHealthContributor {
     private Map<String, HealthContributor> contributors=new LinkedHashMap<>();
 
 
-    public HealthPropostasContribuitor(HealthDataBaseIndicator dataBaseIndicator, HealthServicoFinanceiroIndicador servicoFinanceiroIndicador) {
+    public HealthPropostasContribuitor(HealthDataBaseIndicator dataBaseIndicator, HealthServicoFinanceiroIndicador servicoFinanceiroIndicador, HealthServicoCartaoIndicator servicoCartaoIndicator) {
         contributors.put("analiseFinanceira",servicoFinanceiroIndicador);
         contributors.put("mySql",dataBaseIndicator);
+        contributors.put("servicoDeCartao",servicoCartaoIndicator);
     }
 
     @Override
