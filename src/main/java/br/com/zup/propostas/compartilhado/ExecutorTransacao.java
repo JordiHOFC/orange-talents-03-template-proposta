@@ -36,4 +36,8 @@ public class ExecutorTransacao {
         query.setParameter(nameParametro,parm);
         return query.getResultList();
     }
+
+    public EntityManager getManager() {
+        return manager;
+    }
 }

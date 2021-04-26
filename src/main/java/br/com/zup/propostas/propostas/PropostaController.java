@@ -14,10 +14,13 @@ import javax.persistence.TypedQuery;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 public class PropostaController {
+    //1
     private final ExecutorTransacao executor;
+    //1
     private final AnaliseFinanceiraClient client;
 
     public PropostaController(ExecutorTransacao executor, AnaliseFinanceiraClient client) {
@@ -27,6 +30,7 @@ public class PropostaController {
 
     @PostMapping("/propostas")
     public ResponseEntity<?> cadastrarPropostas(@RequestBody @Valid PropostaRequest request, UriComponentsBuilder uriComponentsBuilder){
+       //1
         if(existDocument(request.getDocumento())){
             ErrorPersonalizado erro=new ErrorPersonalizado("documento","já existe proposta.");
             return ResponseEntity.unprocessableEntity().body(erro);
@@ -34,7 +38,8 @@ public class PropostaController {
         Proposta proposta = request.paraModelo();
         executor.salvar(proposta);
         ResponseEntity<AnaliseReponse> reponse = client.solicitarAnalise(new SolicitacaoAnaliseRequest(proposta));
-        proposta.statusProposta(reponse.getBody().getResultadoSolicitacao());
+        AnaliseReponse analiseReponse=reponse.getBody();
+        proposta.statusProposta(Objects.requireNonNull(analiseReponse).getResultadoSolicitacao());
         executor.atualizarECommitar(proposta);
 
         URI uri=uriComponentsBuilder.path("/propostas/{id}").buildAndExpand(proposta.getId()).toUri();

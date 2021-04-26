@@ -19,6 +19,8 @@ public class Proposta {
     private BigDecimal salario;
     @Enumerated(EnumType.STRING)
     private Status status;
+    @Column(unique = true)
+    private String cartao;
 
     public Proposta(String nome, String email, String documento, String endereco, BigDecimal salario) {
         this.nome = nome;
@@ -61,5 +63,23 @@ public class Proposta {
         else {
             this.status=Status.NAO_ELEGIVEL;
         }
+    }
+
+    public void associarCartao(String numeroCartao) {
+        this.cartao=numeroCartao;
+    }
+
+    @Override
+    public String toString() {
+        return "Proposta{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", email='" + email + '\'' +
+                ", documento='" + documento + '\'' +
+                ", endereco='" + endereco + '\'' +
+                ", salario=" + salario +
+                ", status=" + status +
+                ", cartao='" + cartao + '\'' +
+                '}';
     }
 }

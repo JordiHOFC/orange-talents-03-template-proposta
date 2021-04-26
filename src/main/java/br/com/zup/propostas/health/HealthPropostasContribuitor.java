@@ -12,12 +12,9 @@ import java.util.Map;
 public class HealthPropostasContribuitor implements CompositeHealthContributor {
 
     private Map<String, HealthContributor> contributors=new LinkedHashMap<>();
-    private final HealthDataBaseIndicator dataBaseIndicator;
-    private final HealthServicoFinanceiroIndicador servicoFinanceiroIndicador;
+
 
     public HealthPropostasContribuitor(HealthDataBaseIndicator dataBaseIndicator, HealthServicoFinanceiroIndicador servicoFinanceiroIndicador) {
-        this.dataBaseIndicator = dataBaseIndicator;
-        this.servicoFinanceiroIndicador = servicoFinanceiroIndicador;
         contributors.put("analiseFinanceira",servicoFinanceiroIndicador);
         contributors.put("mySql",dataBaseIndicator);
     }
