@@ -1,6 +1,7 @@
 package br.com.zup.propostas.propostas;
 
 import br.com.zup.propostas.clients.AnaliseFinanceiraClient;
+import br.com.zup.propostas.compartilhado.ExecutorTransacao;
 import br.com.zup.propostas.handler.ErrorPersonalizado;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,40 +11,39 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 public class PropostaController {
-    private final EntityManager manager;
+    private final ExecutorTransacao executor;
     private final AnaliseFinanceiraClient client;
 
-    public PropostaController(EntityManager manager, AnaliseFinanceiraClient client) {
-        this.manager = manager;
+    public PropostaController(ExecutorTransacao executor, AnaliseFinanceiraClient client) {
+        this.executor = executor;
         this.client = client;
     }
 
     @PostMapping("/propostas")
-    @Transactional
     public ResponseEntity<?> cadastrarPropostas(@RequestBody @Valid PropostaRequest request, UriComponentsBuilder uriComponentsBuilder){
         if(existDocument(request.getDocumento())){
             ErrorPersonalizado erro=new ErrorPersonalizado("documento","já existe proposta.");
             return ResponseEntity.unprocessableEntity().body(erro);
         }
         Proposta proposta = request.paraModelo();
-        manager.persist(proposta);
-        AnaliseReponse reponse = client.solicitarAnalise(new SolicitacaoAnaliseRequest(proposta));
-        proposta.statusProposta(reponse.getResultadoSolicitacao());
+        executor.salvar(proposta);
+        ResponseEntity<AnaliseReponse> reponse = client.solicitarAnalise(new SolicitacaoAnaliseRequest(proposta));
+        proposta.statusProposta(reponse.getBody().getResultadoSolicitacao());
+        executor.atualizarECommitar(proposta);
 
         URI uri=uriComponentsBuilder.path("/propostas/{id}").buildAndExpand(proposta.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
     private boolean existDocument(String documento) {
-        TypedQuery<Boolean> query= manager.createQuery("select true from Proposta where documento=:doc",Boolean.class);
-        query.setParameter("doc",documento);
-       return !query.getResultList().isEmpty();
+        List<?> list = executor.executeQueryList("select true from Proposta where documento=:doc", documento, "doc");
+        return !list.isEmpty();
     }
 
 }
