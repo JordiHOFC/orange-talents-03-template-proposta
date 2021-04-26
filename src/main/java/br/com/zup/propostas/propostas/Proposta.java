@@ -41,6 +41,10 @@ public class Proposta {
         return nome;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -69,17 +73,4 @@ public class Proposta {
         this.cartao=numeroCartao;
     }
 
-    @Override
-    public String toString() {
-        return "Proposta{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", email='" + email + '\'' +
-                ", documento='" + documento + '\'' +
-                ", endereco='" + endereco + '\'' +
-                ", salario=" + salario +
-                ", status=" + status +
-                ", cartao='" + cartao + '\'' +
-                '}';
-    }
 }
