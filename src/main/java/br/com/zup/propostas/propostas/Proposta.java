@@ -45,6 +45,10 @@ public class Proposta {
         return status;
     }
 
+    public String getCartao() {
+        return cartao;
+    }
+
     public String getEmail() {
         return email;
     }
