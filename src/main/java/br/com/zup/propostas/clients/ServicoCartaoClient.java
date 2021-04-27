@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(value = "servico-de-cartao", url = "http://localhost:8888/api/cartoes")
+@FeignClient(value = "servico-de-cartao", url = "${SYSTEMACCOUNTS:http://localhost:8888/api/cartoes}")
 public interface ServicoCartaoClient {
     @PostMapping
     void solicitaCriacaoCartao(SolicitacaoAnaliseRequest request);
