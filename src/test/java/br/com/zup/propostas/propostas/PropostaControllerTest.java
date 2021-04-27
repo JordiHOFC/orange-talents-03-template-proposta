@@ -41,6 +41,7 @@ class PropostaControllerTest {
         PropostaRequest propostaRequest= new PropostaRequest("Jordi","20.280.336/0001-62",
                 "jordi@s.com","rua teclado de morais n 190, rayzer,sao gotardo-mg-38820-000",new BigDecimal("2000"));
         Proposta proposta=propostaRequest.paraModelo();
+
         String request=mapper.writeValueAsString(propostaRequest);
 
         URI uri= URI.create("/propostas");
