@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(value = "servico-de-cartao", url = "${SYSTEMACCOUNTS:http://localhost:8888/api/cartoes}")
 public interface ServicoCartaoClient {
     @PostMapping
-    void solicitaCriacaoCartao(SolicitacaoAnaliseRequest request);
-    @GetMapping(params = "idProposta")
-    ResponseEntity<CartaoResponse> solicitaCartao(@RequestParam String idProposta);
+    ResponseEntity<CartaoResponse> solicitaCartao(SolicitacaoAnaliseRequest request);
 
 }

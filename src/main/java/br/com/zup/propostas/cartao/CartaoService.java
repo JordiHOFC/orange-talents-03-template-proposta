@@ -27,29 +27,18 @@ public class CartaoService {
         this.propostaRepository = propostaRepository;
     }
 
-    @Scheduled(fixedRate = 10000)//a cada 10 segundos submeta
+    @Scheduled(fixedRate = 30000)//a cada 10 segundos submeta
     public void solicicaCriacaoDeCartao(){
         List<Proposta> propostasSemCartao=propostaRepository.findByCartaoIsNullAndStatusIs(Status.ELEGIVEL);
         if(!propostasSemCartao.isEmpty()) {
             propostasSemCartao.forEach(proposta -> {
-                servicoCartaoClient.solicitaCriacaoCartao(new SolicitacaoAnaliseRequest(proposta));
-            });
-        }
-    }
-    @Scheduled(fixedRate = 30000)
-    public void solicitaCartao(){
-       List<Proposta> propostasSemCartao=propostaRepository.findByCartaoIsNullAndStatusIs(Status.ELEGIVEL);
-        if(!propostasSemCartao.isEmpty()) {
-            propostasSemCartao.forEach(proposta -> {
-                ResponseEntity<CartaoResponse> cartaoResponseResponseEntity = servicoCartaoClient.solicitaCartao(proposta.getId().toString());
-                if(cartaoResponseResponseEntity.getStatusCode().equals(HttpStatus.OK)){
+                ResponseEntity<CartaoResponse> cartaoResponseResponseEntity =  servicoCartaoClient.solicitaCartao(new SolicitacaoAnaliseRequest(proposta));
+                if(cartaoResponseResponseEntity.getStatusCode().equals(HttpStatus.CREATED)){
                     proposta.associarCartao(cartaoResponseResponseEntity.getBody().getId());
                     executor.atualizarECommitar(proposta);
                 }
             });
-
-
         }
-
     }
+
 }
