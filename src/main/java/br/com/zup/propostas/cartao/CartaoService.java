@@ -12,8 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Query;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class CartaoService {
@@ -27,14 +27,16 @@ public class CartaoService {
         this.propostaRepository = propostaRepository;
     }
 
-    @Scheduled(fixedRate = 30000)//a cada 10 segundos submeta
+    @Scheduled(fixedRate = 30000)//a cada 30 segundos submeta
     public void solicicaCriacaoDeCartao(){
         List<Proposta> propostasSemCartao=propostaRepository.findByCartaoIsNullAndStatusIs(Status.ELEGIVEL);
         if(!propostasSemCartao.isEmpty()) {
             propostasSemCartao.forEach(proposta -> {
                 ResponseEntity<CartaoResponse> cartaoResponseResponseEntity =  servicoCartaoClient.solicitaCartao(new SolicitacaoAnaliseRequest(proposta));
                 if(cartaoResponseResponseEntity.getStatusCode().equals(HttpStatus.CREATED)){
-                    proposta.associarCartao(cartaoResponseResponseEntity.getBody().getId());
+                    CartaoResponse cartaoResponseResponseEntityBody = cartaoResponseResponseEntity.getBody();
+                    Cartao novoCartao= Objects.requireNonNull(cartaoResponseResponseEntityBody).toCard();
+                    proposta.associarCartao(novoCartao);
                     executor.atualizarECommitar(proposta);
                 }
             });

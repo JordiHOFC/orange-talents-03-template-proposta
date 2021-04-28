@@ -1,6 +1,7 @@
 package br.com.zup.propostas.compartilhado;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

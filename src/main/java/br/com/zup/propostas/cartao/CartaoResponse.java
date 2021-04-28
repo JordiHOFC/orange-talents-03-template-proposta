@@ -1,5 +1,6 @@
 package br.com.zup.propostas.cartao;
 
+import br.com.zup.propostas.propostas.Proposta;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
@@ -38,4 +39,9 @@ public class CartaoResponse {
     public String getId() {
         return id;
     }
+
+    public Cartao toCard(){
+        return new Cartao(this.id);
+    }
+
 }

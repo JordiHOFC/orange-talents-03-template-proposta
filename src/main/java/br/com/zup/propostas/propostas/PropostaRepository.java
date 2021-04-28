@@ -2,6 +2,7 @@ package br.com.zup.propostas.propostas;
 
 import br.com.zup.propostas.propostas.Proposta;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 

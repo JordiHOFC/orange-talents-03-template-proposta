@@ -1,5 +1,7 @@
 package br.com.zup.propostas.propostas;
 
+import br.com.zup.propostas.cartao.Cartao;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 
@@ -19,8 +21,8 @@ public class Proposta {
     private BigDecimal salario;
     @Enumerated(EnumType.STRING)
     private Status status;
-    @Column(unique = true)
-    private String cartao;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Cartao cartao;
 
     public Proposta(String nome, String email, String documento, String endereco, BigDecimal salario) {
         this.nome = nome;
@@ -45,7 +47,7 @@ public class Proposta {
         return status;
     }
 
-    public String getCartao() {
+    public Cartao getCartao() {
         return cartao;
     }
 
@@ -64,6 +66,7 @@ public class Proposta {
     public BigDecimal getSalario() {
         return salario;
     }
+
     public void statusProposta(ResultadoSolicitacao resultadoSolicitacao){
         if(resultadoSolicitacao.equals(ResultadoSolicitacao.SEM_RESTRICAO)){
             this.status=Status.ELEGIVEL;
@@ -73,8 +76,8 @@ public class Proposta {
         }
     }
 
-    public void associarCartao(String numeroCartao) {
-        this.cartao=numeroCartao;
+    public void associarCartao(Cartao cartao){
+        this.cartao=cartao;
     }
 
 }

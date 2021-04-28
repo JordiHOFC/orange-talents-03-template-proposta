@@ -4,6 +4,7 @@ import br.com.zup.propostas.clients.AnaliseFinanceiraClient;
 import br.com.zup.propostas.compartilhado.ExecutorTransacao;
 import br.com.zup.propostas.handler.ErrorPersonalizado;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 public class PropostaController {

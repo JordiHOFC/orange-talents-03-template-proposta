@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.net.URI;
 
@@ -29,6 +30,7 @@ class AcompanharPropostaControllerTest {
     private PropostaRepository repository;
 
     @Test
+    @Transactional
     public void deveRetornar200eaPropostaDetalhada() throws Exception {
         Proposta proposta=new Proposta("Jordi","20.280.336/0001-62",
                 "jordi@s.com","rua teclado de morais n 190, rayzer,sao gotardo-mg-38820-000",new BigDecimal("2000"));
