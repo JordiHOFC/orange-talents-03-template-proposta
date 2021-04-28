@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.ArrayList;
@@ -30,10 +31,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.web.util.UriComponentsBuilder.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@Transactional
 class BiometriaControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -50,18 +53,16 @@ class BiometriaControllerTest {
          manager.salvar(proposta);
         Cartao cartao= new Cartao(id,proposta);
         manager.atualizarECommitar(cartao);
-        Long idBiometria=1L;
-        String base64 ="é um base64";
-        String baseMeiaQuatro= Base64.getEncoder().encodeToString(base64.getBytes());
+        String baseMeiaQuatro= Base64.getEncoder().encodeToString("base64".getBytes());
         BiometriaRequest requests=new BiometriaRequest(baseMeiaQuatro);
-        URI uriRequest = UriComponentsBuilder.fromUriString("/cartoes/{id}/biometrias")
+        URI uriRequest = fromUriString("/cartoes/{id}/biometrias")
                 .buildAndExpand(id).toUri();
-        String location=UriComponentsBuilder.fromUriString("/cartoes/{id}/biometrias/{idBiometria}").buildAndExpand(id,idBiometria).toUriString();
         mockMvc.perform(post(uriRequest)
                 .contentType(APPLICATION_JSON)
                 .content(mapper.writeValueAsString(requests)))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("location", location));
+                .andExpect(redirectedUrlPattern("/cartoes/*/biometrias/*"));
+
 
     }
     @Test
@@ -74,7 +75,7 @@ class BiometriaControllerTest {
         manager.atualizarECommitar(cartao);
         String base64 ="é um base64";
         BiometriaRequest requests=new BiometriaRequest(base64);
-        URI uriRequest = UriComponentsBuilder.fromUriString("/cartoes/{id}/biometrias")
+        URI uriRequest = fromUriString("/cartoes/{id}/biometrias")
                 .buildAndExpand(id).toUri();
         mockMvc.perform(post(uriRequest)
                 .contentType(APPLICATION_JSON)

@@ -28,12 +28,6 @@ public class ExecutorTransacao {
         return object;
     }
     @Transactional
-    public <T> T saveAndFlush(T object){
-        manager.merge(object);
-        manager.flush();
-        return object;
-    }
-    @Transactional
     public <T> T executor(Supplier<T> action){
         return action.get();
     }

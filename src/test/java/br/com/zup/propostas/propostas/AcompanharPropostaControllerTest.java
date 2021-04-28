@@ -16,10 +16,16 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.net.URI;
 
+import static br.com.zup.propostas.propostas.ResultadoSolicitacao.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.web.util.UriComponentsBuilder.*;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@Transactional
 class AcompanharPropostaControllerTest {
 
     @Autowired
@@ -30,17 +36,16 @@ class AcompanharPropostaControllerTest {
     private PropostaRepository repository;
 
     @Test
-    @Transactional
     public void deveRetornar200eaPropostaDetalhada() throws Exception {
         Proposta proposta=new Proposta("Jordi","20.280.336/0001-62",
                 "jordi@s.com","rua teclado de morais n 190, rayzer,sao gotardo-mg-38820-000",new BigDecimal("2000"));
-        proposta.statusProposta(ResultadoSolicitacao.COM_RESTRICAO);
+        proposta.statusProposta(COM_RESTRICAO);
         proposta=repository.save(proposta);
         PropostaResponse propostaResponse= new PropostaResponse(proposta);
         String response= mapper.writeValueAsString(propostaResponse);
-        URI uri= UriComponentsBuilder.fromUriString("/propostas/{id}").buildAndExpand(proposta.getId()).toUri();
-        mockMvc.perform(MockMvcRequestBuilders.get(uri))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(response));
+        URI uri= fromUriString("/propostas/{id}").buildAndExpand(proposta.getId()).toUri();
+        mockMvc.perform(get(uri))
+                .andExpect(status().isOk())
+                .andExpect(content().json(response));
     }
 }
