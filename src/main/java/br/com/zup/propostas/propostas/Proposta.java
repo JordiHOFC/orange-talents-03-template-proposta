@@ -21,7 +21,7 @@ public class Proposta {
     private BigDecimal salario;
     @Enumerated(EnumType.STRING)
     private Status status;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "proposta",cascade = CascadeType.ALL)
     private Cartao cartao;
 
     public Proposta(String nome, String email, String documento, String endereco, BigDecimal salario) {

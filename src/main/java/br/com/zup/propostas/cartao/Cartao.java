@@ -11,19 +11,17 @@ import java.util.List;
 public class Cartao {
     @Id
     private String id;
-
-    @OneToMany(mappedBy = "cartao", cascade = CascadeType.MERGE)
+    @OneToOne
+    private Proposta proposta;
+    @OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL)
     private List<Biometria> biometrias= new ArrayList<>();
 
-    public Cartao(String id) {
+    public Cartao(String id, Proposta proposta) {
         this.id = id;
+        this.proposta = proposta;
     }
 
     public Cartao() {
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getId() {
@@ -34,8 +32,8 @@ public class Cartao {
         return biometrias;
     }
 
-    public void associarBiometria(List<Biometria> biometrias){
-        this.biometrias.addAll(biometrias);
+    public void associarBiometria(Biometria biometria){
+        this.biometrias.add(biometria);
 
     }
 }

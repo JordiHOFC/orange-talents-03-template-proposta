@@ -23,15 +23,15 @@ public class BiometriaController {
 
     @PostMapping("cartoes/{id}/biometrias")
     public ResponseEntity<?> cadastrarBiometria(@PathVariable String id, @RequestBody @Valid BiometriaRequest request){
-        Long idBiometria=1L;
         Cartao cartao = executorTransacao.getManager().find(Cartao.class, id);
         if (cartao==null){
             return ResponseEntity.notFound().build();
         }
-        List<Biometria> biometrias = request.paraModelo(cartao);
-        cartao.associarBiometria(biometrias);
+        Biometria biometria = request.paraModelo(cartao);
+        executorTransacao.salvar(biometria);
+        cartao.associarBiometria(biometria);
         executorTransacao.atualizarECommitar(cartao);
-        URI uri= UriComponentsBuilder.fromPath("/cartoes/{id}/biometrias/{idBiometria}").buildAndExpand(Map.of("id",id,"idBiometria",idBiometria)).toUri();
+        URI uri= UriComponentsBuilder.fromPath("/cartoes/{id}/biometrias/{idBiometria}").buildAndExpand(Map.of("id",id,"idBiometria",biometria.getId())).toUri();
         return ResponseEntity.created(uri).build();
     }
 }

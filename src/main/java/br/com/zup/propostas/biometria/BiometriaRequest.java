@@ -16,23 +16,23 @@ import java.util.stream.Collectors;
 @JsonAutoDetect
 public class BiometriaRequest {
 
-    @Size(min = 1)
     @JsonProperty
     @NotNull
-    @Valid
-    private List<ImagemBase64Request> image;
+    @NotBlank
+    @IsBase64
+    private String image;
 
     @JsonCreator
-    public BiometriaRequest(List<ImagemBase64Request>  image) {
+    public BiometriaRequest(String image) {
         this.image = image;
     }
 
-    public List<ImagemBase64Request> getImage() {
+    public String getImage() {
         return image;
     }
 
-    public List<Biometria> paraModelo(Cartao cartao){
-        return image.stream().map(i->new Biometria(i.getImage(),cartao)).collect(Collectors.toList());
+    public Biometria paraModelo(Cartao cartao){
+        return new Biometria(image,cartao);
     }
 
 

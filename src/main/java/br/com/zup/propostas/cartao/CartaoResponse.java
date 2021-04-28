@@ -40,8 +40,9 @@ public class CartaoResponse {
         return id;
     }
 
-    public Cartao toCard(){
-        return new Cartao(this.id);
+
+    public Cartao toCard(Proposta proposta){
+        return new Cartao(this.id,proposta);
     }
 
 }

@@ -35,7 +35,7 @@ public class CartaoService {
                 ResponseEntity<CartaoResponse> cartaoResponseResponseEntity =  servicoCartaoClient.solicitaCartao(new SolicitacaoAnaliseRequest(proposta));
                 if(cartaoResponseResponseEntity.getStatusCode().equals(HttpStatus.CREATED)){
                     CartaoResponse cartaoResponseResponseEntityBody = cartaoResponseResponseEntity.getBody();
-                    Cartao novoCartao= Objects.requireNonNull(cartaoResponseResponseEntityBody).toCard();
+                    Cartao novoCartao= cartaoResponseResponseEntityBody.toCard(proposta);
                     proposta.associarCartao(novoCartao);
                     executor.atualizarECommitar(proposta);
                 }

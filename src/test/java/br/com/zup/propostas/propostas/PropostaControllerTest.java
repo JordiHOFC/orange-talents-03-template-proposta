@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -21,10 +22,15 @@ import java.math.BigDecimal;
 import java.net.URI;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Transactional
+@AutoConfigureDataJpa
 class PropostaControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -34,41 +40,37 @@ class PropostaControllerTest {
     private EntityManager manager;
 
     @Test
-    @Order(1)
     public void deveRetornar201eLocation() throws Exception {
 
         PropostaRequest propostaRequest= new PropostaRequest("Jordi","20.280.336/0001-62",
                 "jordi@s.com","rua teclado de morais n 190, rayzer,sao gotardo-mg-38820-000",new BigDecimal("2000"));
         Proposta proposta=propostaRequest.paraModelo();
-
         String request=mapper.writeValueAsString(propostaRequest);
 
         URI uri= URI.create("/propostas");
-        mockMvc.perform(MockMvcRequestBuilders.post(uri)
+        mockMvc.perform(post(uri)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.header().string("location","http://localhost/propostas/4"));
+                .andExpect(status().isCreated())
+                .andExpect(redirectedUrlPattern("**/propostas/*"));
 
     }
     @Test
-    @Transactional
-    @Order(2)
     public void deveRetornar422eMensagemErro() throws Exception {
 
         PropostaRequest propostaRequest= new PropostaRequest("Jordi","20.280.336/0001-62",
                 "jordi@s.com","rua teclado de morais n 190, rayzer,sao gotardo-mg-38820-000",new BigDecimal("2000"));
         Proposta proposta=propostaRequest.paraModelo();
-
+        manager.persist(proposta);
         String request=mapper.writeValueAsString(propostaRequest);
         ErrorPersonalizado erro=new ErrorPersonalizado("documento","já existe proposta.");
         String response= mapper.writeValueAsString(erro);
         URI uri= URI.create("/propostas");
-        mockMvc.perform(MockMvcRequestBuilders.post(uri)
+        mockMvc.perform(post(uri)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request))
-                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
-                .andExpect(MockMvcResultMatchers.content().json(response));
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().json(response));
 
     }
 

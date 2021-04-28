@@ -32,4 +32,7 @@ public class Biometria {
     public Biometria() {
     }
 
+    public Long getId() {
+        return id;
+    }
 }
