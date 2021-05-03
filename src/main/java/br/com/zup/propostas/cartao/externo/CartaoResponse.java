@@ -1,5 +1,6 @@
-package br.com.zup.propostas.cartao;
+package br.com.zup.propostas.cartao.externo;
 
+import br.com.zup.propostas.cartao.*;
 import br.com.zup.propostas.propostas.Proposta;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;

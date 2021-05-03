@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 
-@FeignClient(value = "analise-financeira", url =  "${SYSTEMFINANCE:http://localhost:9999/api/solicitacao}")
+@FeignClient(value = "analise-financeira", url =  "${propostas.env.systemfinance}")
 public interface AnaliseFinanceiraClient {
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<AnaliseReponse> solicitarAnalise(SolicitacaoAnaliseRequest request);
