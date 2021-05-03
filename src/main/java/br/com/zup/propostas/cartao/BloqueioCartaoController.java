@@ -1,5 +1,9 @@
 package br.com.zup.propostas.cartao;
 
+import br.com.zup.propostas.cartao.externo.ResultadoBloqueioCartaoResponse;
+import br.com.zup.propostas.cartao.externo.SolicitaBloqueioCartaoRequest;
+import br.com.zup.propostas.cartao.externo.StatusBloqueioResponse;
+import br.com.zup.propostas.clients.ServicoCartaoClient;
 import br.com.zup.propostas.handler.ErrorPersonalizado;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +12,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 
@@ -16,18 +19,20 @@ import java.util.Optional;
 public class BloqueioCartaoController {
     //1
     private final CartaoRepository cartaoRepository;
+    //1
+    private final ServicoCartaoClient  cartaoClient;
 
-    public BloqueioCartaoController(CartaoRepository cartaoRepository) {
+    public BloqueioCartaoController(CartaoRepository cartaoRepository, ServicoCartaoClient cartaoClient) {
         this.cartaoRepository = cartaoRepository;
+        this.cartaoClient = cartaoClient;
     }
 
     @PutMapping("cartoes/{id}/bloqueios")
-    @Transactional
     public ResponseEntity<?> bloqueioCartao(@PathVariable String id, HttpServletRequest request){
         Optional<Cartao> cartao = cartaoRepository.findById(id);
         //1
         if (cartao.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorPersonalizado("cartao","não cadastrado."));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorPersonalizado("cartao","não cadastrado."));
         }
         //1
         if (!cartao.get().getBloqueios().isEmpty()){
@@ -36,8 +41,12 @@ public class BloqueioCartaoController {
         String userAgent=request.getHeader("User-Agent");
         String ip=request.getRemoteAddr();
         BloqueioCartao bloqueio=new BloqueioCartao(cartao.get(),userAgent,ip);
-        cartao.get().associarBloqueio(bloqueio);
+        ResponseEntity<ResultadoBloqueioCartaoResponse> bloqueioCartaoResponse = cartaoClient.solicitaBloqueio(id, new SolicitaBloqueioCartaoRequest());
+        //1
+        if(bloqueioCartaoResponse.getBody().getResultado().equals(StatusBloqueioResponse.BLOQUEADO)){
+            cartao.get().associarBloqueio(bloqueio);
+        }
+        cartaoRepository.save(cartao.get());
         return ResponseEntity.ok().build();
-
     }
 }

@@ -7,13 +7,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonAutoDetect
 public class ResultadoBloqueioCartaoResponse {
     @JsonProperty
-    private StatusBloqueio resultado;
+    private StatusBloqueioResponse resultado;
     @JsonCreator
-    public ResultadoBloqueioCartaoResponse(StatusBloqueio resultado) {
+    public ResultadoBloqueioCartaoResponse(StatusBloqueioResponse resultado) {
         this.resultado = resultado;
     }
 
-    public StatusBloqueio getResultado() {
+    public StatusBloqueioResponse getResultado() {
         return resultado;
     }
 }

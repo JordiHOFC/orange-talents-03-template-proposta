@@ -1,5 +1,5 @@
 package br.com.zup.propostas.cartao.externo;
 
-public enum StatusBloqueio {
+public enum StatusBloqueioResponse {
     BLOQUEADO,FALHA;
 }

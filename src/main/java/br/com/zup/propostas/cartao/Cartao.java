@@ -21,6 +21,8 @@ public class Cartao {
 
     @OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL)
     private List<BloqueioCartao> bloqueios=new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    private StatusBloqueio status=StatusBloqueio.DESBLOQUEADO;
 
     public Cartao(String id, Proposta proposta) {
         this.id = id;
@@ -44,6 +46,7 @@ public class Cartao {
     }
     public void associarBloqueio(BloqueioCartao bloqueio){
         this.bloqueios.add(bloqueio);
+        this.status=StatusBloqueio.BLOQUEADO;
     }
 
     public List<BloqueioCartao> getBloqueios() {
