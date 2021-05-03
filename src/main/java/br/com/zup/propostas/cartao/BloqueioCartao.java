@@ -30,4 +30,6 @@ public class BloqueioCartao {
         this.ip = ip;
     }
 
+    public BloqueioCartao() {
+    }
 }
