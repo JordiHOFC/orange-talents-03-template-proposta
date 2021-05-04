@@ -1,0 +1,26 @@
+# minha configuração global
+global:
+  scrape_interval:     15s # Defina o intervalo de raspagem para cada 15 segundos. O padrão é a cada 1 minuto.
+  evaluation_interval: 15s # Avaliar regras a cada 15 segundos. O padrão é a cada 1 minuto.
+   # scrape_timeout é definido como o padrão global (10s).
+
+# Carregue as regras uma vez e avalie-as periodicamente de acordo com o 'intervalo_de_avaliação' global.
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# Uma configuração de scrape contendo exatamente um ponto de extremidade para limpar:
+# Aqui está o próprio Prometeu.
+scrape_configs:
+  # O nome do trabalho é adicionado como um rótulo `job = <job_name>` para qualquer série de tempo extraída desta configuração.
+  - job_name: 'prometheus'
+    # metrics_path padroniza para '/ metrics'
+    # esquema padrão é 'http'.
+    static_configs:
+    - targets: ['127.0.0.1:9090']
+
+  - job_name: 'proposta'
+    metrics_path: '/actuator/prometheus'
+	scrape_interval: 5s
+    static_configs:
+    - targets: ['proposta:8080']
