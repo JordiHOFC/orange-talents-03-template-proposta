@@ -51,7 +51,6 @@ services:
       - analise
       - transacoes
       - postgres
-      - propostas
     environment:
       DB_VENDOR: postgres
       DB_ADDR: postgres
@@ -111,19 +110,20 @@ services:
   prometheus:
     image: prom/prometheus
     volumes:
-      - ./prometheus.yml:/etc/prometheus
       - prometheus-volume:/etc/prometheus/
+    #  - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     network_mode: bridge
     ports:
-      - "9090:9090"
+      - 9090:9090
     command: --config.file=/etc/prometheus/prometheus.yml
+
   grafana:
     image: grafana/grafana
     volumes:
       - grafana-volume:/var/lib/grafana
     network_mode: bridge
     ports:
-      - "3000:3000"
+      - 3000:3000
     depends_on:
       - prometheus
 
@@ -139,16 +139,30 @@ services:
 
   propostas:
     build: ./
-    image: jordi/propostas:0.7
+    image: jordi/propostas:1.8
     ports:
       - 8080:8080
     environment:
-      DB_URL: jdbc:mysql://0.0.0.0:3306/propostas?allowPublicKeyRetrieval=true&useSSL=false
+      DB_URL: jdbc:mysql://mysql:3306/propostas
       DB_USERNAME: root
       DB_PASSWORD: root
       SYSTEM_FINANCE: http://analise:9999/api/solicitacao
       SYSTEM_ACCOUNTS: http://contas:8888/api/cartoes
-      SECURITY_AUTH_URI: http://keycloak:18080/auth/realms/proposal
+      SECURITY_OAUTH_URI: http://keycloak:18080/auth/realms/proposta
+      SECURITY_OAUTH_JWT_URI: http://keycloak:8080/auth/realms/proposta/protocol/openid-connect/certs
+    depends_on:
+      - mysql
+      - keycloak
+
+  mysql:
+    image: mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: propostas
+
 
 volumes:
   grafana-volume:
