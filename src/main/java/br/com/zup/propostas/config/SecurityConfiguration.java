@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
 @Configuration
 @EnableWebSecurity
@@ -18,10 +20,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http.csrf().disable();
+        http.headers().httpStrictTransportSecurity().disable();
         http.authorizeRequests(request->
                 request.antMatchers("/**")
-                        .authenticated()
+                        .hasAuthority("SCOPE_proposta")
         ).
         oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
         .sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

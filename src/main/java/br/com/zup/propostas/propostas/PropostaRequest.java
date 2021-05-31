@@ -1,27 +1,21 @@
 package br.com.zup.propostas.propostas;
 
-import br.com.zup.propostas.propostas.groupsPessoa.GroupsSequence;
-import br.com.zup.propostas.propostas.groupsPessoa.PessoaFisica;
-import br.com.zup.propostas.propostas.groupsPessoa.PessoaJuridica;
+import br.com.zup.propostas.validator.DocumentoValido;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.validator.constraints.br.CNPJ;
-import org.hibernate.validator.constraints.br.CPF;
-import org.hibernate.validator.group.GroupSequenceProvider;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
-@GroupSequenceProvider(value = GroupsSequence.class)
+
 public class PropostaRequest {
     @JsonProperty
     @NotBlank
     private String nome;
     @JsonProperty
     @NotBlank
-    @CPF(groups = PessoaFisica.class)
-    @CNPJ(groups = PessoaJuridica.class)
+    @DocumentoValido
     private String documento;
     @JsonProperty
     @NotBlank

@@ -136,23 +136,23 @@ services:
       VAULT_TOKEN: ee413645-dbe8-4848-afc6-6bb2768ada75
       VAULT_ADDR: http://127.0.0.1:8200
 
-
-  propostas:
-    build: ./
-    image: jordi/propostas:1.8
-    ports:
-      - 8080:8080
-    environment:
-      DB_URL: jdbc:mysql://mysql:3306/propostas
-      DB_USERNAME: root
-      DB_PASSWORD: root
-      SYSTEM_FINANCE: http://analise:9999/api/solicitacao
-      SYSTEM_ACCOUNTS: http://contas:8888/api/cartoes
-      SECURITY_OAUTH_URI: http://keycloak:18080/auth/realms/proposta
-      SECURITY_OAUTH_JWT_URI: http://keycloak:8080/auth/realms/proposta/protocol/openid-connect/certs
-    depends_on:
-      - mysql
-      - keycloak
+#
+#  propostas:
+#    build: ./
+#    image: jordi/propostas:1.9
+#    ports:
+#      - 8080:8080
+#    environment:
+#      DB_URL: jdbc:mysql://mysql:3306/propostas
+#      DB_USERNAME: root
+#      DB_PASSWORD: root
+#      SYSTEM_FINANCE: http://analise:9999/api/solicitacao
+#      SYSTEM_ACCOUNTS: http://contas:8888/api/cartoes
+#      SECURITY_OAUTH_URI: http://keycloak:18080/auth/realms/propostas
+#      SECURITY_OAUTH_JWT_URI: http://keycloak:8080/auth/realms/propostas/protocol/openid-connect/certs
+#    depends_on:
+#      - mysql
+#      - keycloak
 
   mysql:
     image: mysql

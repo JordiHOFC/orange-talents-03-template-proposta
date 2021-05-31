@@ -4,8 +4,8 @@ import br.com.zup.propostas.biometria.Biometria;
 import br.com.zup.propostas.propostas.Proposta;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -21,6 +21,10 @@ public class Cartao {
 
     @OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL)
     private List<BloqueioCartao> bloqueios=new ArrayList<>();
+
+    @OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL)
+    private List<AvisoDeViagem> avisoDeViagems = new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
     private StatusBloqueio status=StatusBloqueio.DESBLOQUEADO;
 
@@ -48,8 +52,12 @@ public class Cartao {
         this.bloqueios.add(bloqueio);
         this.status=StatusBloqueio.BLOQUEADO;
     }
+    public  void associarAvisoImagem(AvisoDeViagem avisoDeViagem){
+        this.avisoDeViagems.add(avisoDeViagem);
+    }
 
     public List<BloqueioCartao> getBloqueios() {
         return bloqueios;
     }
+
 }
