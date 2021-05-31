@@ -1,15 +1,11 @@
 package br.com.zup.propostas.cartao;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import br.com.zup.propostas.cartao.externo.AvisoViagem;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.method.annotation.MethodArgumentConversionNotSupportedException;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class AvisoDeViagemRequest {
@@ -28,5 +24,8 @@ public class AvisoDeViagemRequest {
 
     public AvisoDeViagem paraModelo(Cartao cartao,String userAgent, String ip){
         return new AvisoDeViagem(destino, validoAte,cartao,userAgent,ip);
+    }
+    public AvisoViagem paraAvisoViagem(){
+        return new AvisoViagem(destino, LocalDate.from(validoAte));
     }
 }

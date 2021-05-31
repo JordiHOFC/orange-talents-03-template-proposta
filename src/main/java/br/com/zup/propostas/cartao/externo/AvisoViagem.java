@@ -2,15 +2,15 @@ package br.com.zup.propostas.cartao.externo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class AvisoViagem {
     @JsonProperty
     private String destino;
     @JsonProperty
-    private LocalDateTime validoAte;
+    private LocalDate validoAte;
 
-    public AvisoViagem(String destino, LocalDateTime validoAte) {
+    public AvisoViagem(String destino, LocalDate validoAte) {
         this.destino = destino;
         this.validoAte = validoAte;
     }
