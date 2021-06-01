@@ -28,7 +28,7 @@ public class AvisoDeViagemController {
         String ip=request.getRemoteAddr();
         final Optional<Cartao> possivelCartao = repository.findById(id);
         if (possivelCartao.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorPersonalizado("cartao","já cadastrado."));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorPersonalizado("cartao","não cadastrado."));
         }
         ResponseEntity<?> reponse = cartaoClient.solicitaCriarAvisoParaViagem(id, avisoDeViagemRequest.paraAvisoViagem());
         if(!reponse.getStatusCode().equals(HttpStatus.OK)){

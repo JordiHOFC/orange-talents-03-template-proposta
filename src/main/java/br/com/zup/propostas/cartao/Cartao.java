@@ -25,8 +25,12 @@ public class Cartao {
     @OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL)
     private List<AvisoDeViagem> avisoDeViagems = new ArrayList<>();
 
+    @OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL)
+    private List<CarteiraDigital> carteirasDigitais = new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
     private StatusBloqueio status=StatusBloqueio.DESBLOQUEADO;
+
 
     public Cartao(String id, Proposta proposta) {
         this.id = id;
@@ -60,4 +64,7 @@ public class Cartao {
         return bloqueios;
     }
 
+    public void associarCarteira(CarteiraDigital carteiraDigital) {
+        this.carteirasDigitais.add(carteiraDigital);
+    }
 }

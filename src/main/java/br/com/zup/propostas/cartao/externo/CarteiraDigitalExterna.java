@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 
-public class CarteiraDigital {
+public class CarteiraDigitalExterna {
     @JsonProperty
     private String id;
     @JsonProperty
@@ -14,7 +14,7 @@ public class CarteiraDigital {
     @JsonProperty
     private String emissor;
 
-    public CarteiraDigital(String id, String email, LocalDateTime associadaEm, String emissor) {
+    public CarteiraDigitalExterna(String id, String email, LocalDateTime associadaEm, String emissor) {
         this.id = id;
         this.email = email;
         this.associadaEm = associadaEm;

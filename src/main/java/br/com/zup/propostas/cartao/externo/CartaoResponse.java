@@ -15,7 +15,7 @@ public class CartaoResponse {
     private String titular;
     private List<Bloqueio> bloqueios=new ArrayList<>();
     private List<AvisoViagem> avisos= new ArrayList<>();
-    private List<CarteiraDigital> carteiras= new ArrayList<>();
+    private List<CarteiraDigitalExterna> carteiras= new ArrayList<>();
     private List<Parcela> parcelas= new ArrayList<>();
     private Integer limite;
     private Renegociacao renegociacao;
@@ -23,7 +23,7 @@ public class CartaoResponse {
     private String idProposta;
 
     @JsonCreator
-    public CartaoResponse(String id, LocalDateTime emitidoEm, String titular, List<Bloqueio> bloqueios, List<AvisoViagem> avisos, List<CarteiraDigital> carteiras, List<Parcela> parcelas, Integer limite, Renegociacao renegociacao, Vencimento vencimento, String idProposta) {
+    public CartaoResponse(String id, LocalDateTime emitidoEm, String titular, List<Bloqueio> bloqueios, List<AvisoViagem> avisos, List<CarteiraDigitalExterna> carteiras, List<Parcela> parcelas, Integer limite, Renegociacao renegociacao, Vencimento vencimento, String idProposta) {
         this.id = id;
         this.emitidoEm = emitidoEm;
         this.titular = titular;
